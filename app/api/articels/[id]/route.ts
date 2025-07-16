@@ -170,8 +170,13 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       );
     }
 
-    // Use transaction to delete comments and article atomically
+    // Use transaction to delete likes, comments, and article atomically
     await prisma.$transaction(async (tx) => {
+      // Delete all likes associated with the article
+      await tx.like.deleteMany({
+        where: { articleId: id },
+      });
+
       // Delete all comments associated with the article
       await tx.comment.deleteMany({
         where: { articleId: id },
@@ -185,7 +190,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 
     return NextResponse.json({
       success: true,
-      message: 'Article and all related comments deleted successfully',
+      message: 'Article and all related comments and likes deleted successfully',
     });
   } catch (error) {
     console.error('❌ Delete error:', error);
