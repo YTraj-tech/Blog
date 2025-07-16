@@ -248,16 +248,20 @@
 
 
 
-
-
-
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { Play, ArrowRight, CheckCircle, Edit3, BookOpen, TrendingUp, Palette } from "lucide-react";
+import { ArrowRight, CheckCircle, Edit3, BookOpen, TrendingUp, Palette, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+interface Feature {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+}
 
 export default function Herosection() {
   const { isSignedIn, isLoaded } = useUser();
@@ -265,11 +269,17 @@ export default function Herosection() {
 
   const handleCreateClick = () => {
     if (!isSignedIn) {
-      router.push("/sign-in");
+      toast.error("Sign-In Required", {
+        description: "Please sign in to create an article.",
+        duration: 3000,
+      });
+      setTimeout(() => router.push("/sign-in"), 1000);
+    } else {
+      router.push("/dashboard/article/create");
     }
   };
 
-  const features = [
+  const features: Feature[] = [
     { icon: Edit3, title: "Easy Editor", description: "Intuitive writing experience" },
     { icon: BookOpen, title: "Rich Templates", description: "Professional blog layouts" },
     { icon: TrendingUp, title: "SEO Optimized", description: "Boost your visibility" },
@@ -287,7 +297,7 @@ export default function Herosection() {
     <section className="relative min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
       {/* Enhanced Background Grid Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px] sm:bg-[size:40px_40px] md:bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black_70%,transparent_100%)]"></div>
-      
+
       {/* Animated floating orbs - Reduced size on mobile */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-24 h-24 sm:w-48 sm:h-48 md:w-96 md:h-96 bg-purple-500/10 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl animate-pulse"></div>
@@ -346,10 +356,10 @@ export default function Herosection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href={isSignedIn ? "/dashboard/articel/create" : "/sign-in"} onClick={handleCreateClick}>
+              <Link href={isSignedIn ? "/dashboard/article/create" : "/sign-in"} onClick={handleCreateClick}>
                 <Button
                   size="lg"
-                  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center group"
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold transitionuscale-105 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center group"
                   style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
                   disabled={!isLoaded}
                 >
@@ -374,7 +384,7 @@ export default function Herosection() {
           <div className="relative hidden lg:flex justify-center">
             {/* Background glow for the mockup */}
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-indigo-500/20 rounded-3xl blur-3xl transform scale-110"></div>
-            
+
             {/* Main Dashboard Mockup - Enhanced visibility */}
             <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-6 transform rotate-1 hover:rotate-0 transition-all duration-500 w-full max-w-md hover:scale-105 hover:shadow-purple-500/25">
               {/* Header */}

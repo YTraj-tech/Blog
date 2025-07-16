@@ -1,21 +1,26 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import cloudinary from "@/lib/cloudinary";
 
-// 🔍 Zod schema for validation
+// Define custom Cloudinary upload response type
+interface CloudinaryUploadResponse {
+  secure_url: string;
+}
+
+// Zod schema for validation
 const updateSchema = z.object({
   title: z.string().min(3).max(100),
   category: z.string().min(3).max(50),
   content: z.string().min(10),
 });
 
-// ✅ GET: Fetch article by ID
+// GET: Fetch article by ID
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params; // Await the params
-    
+
     const article = await prisma.articles.findUnique({
       where: { id },
       include: {
@@ -39,7 +44,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   }
 }
 
-// ✅ PATCH: Update article
+// PATCH: Update article
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { userId } = await auth();
@@ -91,7 +96,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if (imageFile && imageFile.size > 0) {
       const buffer = Buffer.from(await imageFile.arrayBuffer());
 
-      const upload = await new Promise<{ secure_url: string }>((resolve, reject) => {
+      const upload = await new Promise<CloudinaryUploadResponse>((resolve, reject) => {
         cloudinary.uploader.upload_stream(
           {
             folder: "articles",
@@ -101,7 +106,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
           },
           (err, result) => {
             if (err || !result) return reject(err || new Error("Upload failed"));
-            resolve(result as any);
+            resolve(result as CloudinaryUploadResponse);
           }
         ).end(buffer);
       });
@@ -129,7 +134,6 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
-
 
 
 
