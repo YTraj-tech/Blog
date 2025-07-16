@@ -43,13 +43,12 @@
 
 
 
-
 import { Toaster } from 'sonner';
 import React, { ReactNode } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/prisma';
 
-const Layout = async ({ children }: { children: ReactNode }) => {
+const RootLayout = async ({ children }: { children: ReactNode }) => {
   const user = await currentUser();
   console.log('✅ Clerk user:', user);
 
@@ -83,11 +82,12 @@ const Layout = async ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en">
       <body>
-        <div>{children}</div>
+        
         <Toaster position="top-right" richColors />
+         {children}
       </body>
     </html>
   );
 };
 
-export default Layout;
+export default RootLayout;

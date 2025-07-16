@@ -356,7 +356,7 @@ export default function Herosection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href={isSignedIn ? "/dashboard/article/create" : "/sign-in"} onClick={handleCreateClick}>
+              <Link href={isSignedIn ? "/dashboard/articel/create" : "/sign-in"} onClick={handleCreateClick}>
                 <Button
                   size="lg"
                   className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold transitionuscale-105 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center group"

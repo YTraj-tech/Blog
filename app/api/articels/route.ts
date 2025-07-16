@@ -180,7 +180,6 @@
 //   }
 // }
 
-
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
@@ -197,6 +196,47 @@ const createArticleSchema = z.object({
   category: z.string().min(3, "Category must be at least 3 characters").max(50, "Category must be less than 50 characters"),
   content: z.string().min(10, "Content must be at least 10 characters"),
 });
+
+// Helper function to retry database operations
+async function retryOperation<T>(
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
+  delay: number = 1000
+): Promise<T> {
+  let lastError: Error;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      // Ensure connection is active before operation
+      await prisma.$connect();
+      return await operation();
+    } catch (error) {
+      lastError = error as Error;
+      console.warn(`Database operation failed (attempt ${attempt}/${maxRetries}):`, error);
+      
+      // Check if it's a connection error
+      if (error && typeof error === 'object' && 'code' in error) {
+        const prismaError = error;
+        if (prismaError.code === 'P1001' || prismaError.code === 'P1017') {
+          // Connection error - wait and retry
+          if (attempt < maxRetries) {
+            console.log(`Retrying in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            delay *= 2; // Exponential backoff
+            continue;
+          }
+        }
+      }
+      
+      // If not a connection error or max retries reached, throw
+      if (attempt === maxRetries) {
+        throw lastError;
+      }
+    }
+  }
+  
+  throw lastError!;
+}
 
 export async function POST(req: Request) {
   try {
@@ -233,9 +273,11 @@ export async function POST(req: Request) {
       );
     }
 
-    // Find user in database
-    const existingUser = await prisma.user.findUnique({
-      where: { clerkId: userId },
+    // Find user in database with retry logic
+    const existingUser = await retryOperation(async () => {
+      return await prisma.user.findUnique({
+        where: { clerkId: userId },
+      });
     });
 
     if (!existingUser) {
@@ -286,24 +328,26 @@ export async function POST(req: Request) {
       }
     }
 
-    // Create the article
-    const article = await prisma.articles.create({
-      data: {
-        title: result.data.title,
-        category: result.data.category,
-        content: result.data.content,
-        authorId: existingUser.id,
-        featuredImage: imageUrl || null,
-      },
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
+    // Create the article with retry logic
+    const article = await retryOperation(async () => {
+      return await prisma.articles.create({
+        data: {
+          title: result.data.title,
+          category: result.data.category,
+          content: result.data.content,
+          authorId: existingUser.id,
+          featuredImage: imageUrl || null,
+        },
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
           },
         },
-      },
+      });
     });
 
     return NextResponse.json(
@@ -342,11 +386,35 @@ export async function POST(req: Request) {
       }
     }
 
+    // Handle connection errors specifically
+    if (error && typeof error === 'object' && 'code' in error) {
+      const prismaError = error ;
+      if (prismaError.code === 'P1001') {
+        return NextResponse.json(
+          { error: "Database connection failed. Please try again." },
+          { status: 503 }
+        );
+      }
+      if (prismaError.code === 'P1017') {
+        return NextResponse.json(
+          { error: "Database connection was lost. Please try again." },
+          { status: 503 }
+        );
+      }
+    }
+
     return NextResponse.json(
       {
         error: "Internal server error. Please try again later.",
       },
       { status: 500 }
     );
+  } finally {
+    // Ensure connection is closed
+    try {
+      await prisma.$disconnect();
+    } catch (disconnectError) {
+      console.warn("Warning: Failed to disconnect from database:", disconnectError);
+    }
   }
 }
