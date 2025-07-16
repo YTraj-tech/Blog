@@ -275,7 +275,7 @@ export default function Herosection() {
       });
       setTimeout(() => router.push("/sign-in"), 1000);
     } else {
-      router.push("/dashboard/article/create");
+      router.push("/dashboard/articel/create");
     }
   };
 
