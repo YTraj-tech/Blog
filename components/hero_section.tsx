@@ -130,11 +130,11 @@
 // }
 
 
-
 "use client";
 
 import { Play, ArrowRight, CheckCircle, Edit3, BookOpen, TrendingUp, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Herosection() {
   const features = [
@@ -154,31 +154,31 @@ export default function Herosection() {
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
       {/* Enhanced Background Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black_70%,transparent_100%)]"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px] sm:bg-[size:40px_40px] md:bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black_70%,transparent_100%)]"></div>
       
-      {/* Animated floating orbs */}
+      {/* Animated floating orbs - Reduced size on mobile */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-48 h-48 md:w-96 md:h-96 bg-purple-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
-        <div className="absolute top-3/4 right-1/4 w-48 h-48 md:w-96 md:h-96 bg-blue-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-1/4 left-1/2 w-48 h-48 md:w-96 md:h-96 bg-indigo-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse delay-2000"></div>
+        <div className="absolute top-1/4 left-1/4 w-24 h-24 sm:w-48 sm:h-48 md:w-96 md:h-96 bg-purple-500/10 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl animate-pulse"></div>
+        <div className="absolute top-3/4 right-1/4 w-24 h-24 sm:w-48 sm:h-48 md:w-96 md:h-96 bg-blue-500/10 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-1/4 left-1/2 w-24 h-24 sm:w-48 sm:h-48 md:w-96 md:h-96 bg-indigo-500/10 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl animate-pulse delay-2000"></div>
       </div>
 
-      {/* Subtle animated particles */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Subtle animated particles - Disabled on mobile */}
+      <div className="absolute inset-0 overflow-hidden hidden sm:block">
         <div className="absolute top-10 left-10 w-1 h-1 bg-white/20 rounded-full animate-ping"></div>
         <div className="absolute top-20 right-20 w-1 h-1 bg-purple-400/30 rounded-full animate-ping delay-500"></div>
         <div className="absolute bottom-20 left-20 w-1 h-1 bg-blue-400/30 rounded-full animate-ping delay-1000"></div>
         <div className="absolute bottom-10 right-10 w-1 h-1 bg-indigo-400/30 rounded-full animate-ping delay-1500"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 lg:pt-32 pb-12 sm:pb-16 lg:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Left Column - Content */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {/* Main Heading */}
             <div>
               <h1
-                className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight"
                 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
               >
                 <span className="text-white">Create Stunning</span>
@@ -191,7 +191,7 @@ export default function Herosection() {
 
             {/* Subtitle */}
             <p
-              className="text-xl text-white/90 max-w-2xl leading-relaxed font-medium"
+              className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed font-medium"
               style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
             >
               YT Blog empowers you to craft professional blogs manually with beautiful templates and intuitive tools—no coding required.
@@ -203,7 +203,7 @@ export default function Herosection() {
                 <div key={index} className="flex items-center space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
                   <span
-                    className="text-white/90 font-medium"
+                    className="text-white/90 font-medium text-sm sm:text-base"
                     style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
                   >
                     {benefit}
@@ -214,19 +214,21 @@ export default function Herosection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center group"
-                style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
-              >
-                <span>Start Creating</span>
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <Link href="/dashboard/articel/create">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center group"
+                  style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
+                >
+                  <span>Start Creating</span>
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
 
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-8 py-4 rounded-xl text-lg font-bold transition-all duration-300 flex items-center justify-center group backdrop-blur-sm"
+                className="w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold transition-all duration-300 flex items-center justify-center group backdrop-blur-sm"
                 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
               >
                 <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -241,7 +243,7 @@ export default function Herosection() {
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-indigo-500/20 rounded-3xl blur-3xl transform scale-110"></div>
             
             {/* Main Dashboard Mockup - Enhanced visibility */}
-            <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-6 transform rotate-1 hover:rotate-0 transition-all duration-500 w-96 max-w-md hover:scale-105 hover:shadow-purple-500/25">
+            <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-6 transform rotate-1 hover:rotate-0 transition-all duration-500 w-full max-w-md hover:scale-105 hover:shadow-purple-500/25">
               {/* Header */}
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center space-x-2">
@@ -272,7 +274,7 @@ export default function Herosection() {
                   >
                     Blog Title
                   </h3>
-                  <div className="bg-gradient-to-r  rounded-lg p-3 border-2 border-gradient-to-r from-blue-200 to-purple-200 shadow-sm">
+                  <div className="bg-gradient-to-r from-blue-200 to-purple-200 rounded-lg p-3 border-2 border-blue-200 shadow-sm">
                     <div className="h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded w-3/4 mb-1 shadow-sm"></div>
                     <div className="h-2 bg-gray-400 rounded w-1/2"></div>
                   </div>
@@ -342,20 +344,20 @@ export default function Herosection() {
         </div>
 
         {/* Enhanced Features Grid */}
-        <div className="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="mt-12 sm:mt-16 lg:mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {features.map((feature, index) => (
             <div key={index} className="text-center group">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-xl rounded-2xl mb-4 group-hover:scale-110 transition-all duration-300 shadow-lg border border-white/20 group-hover:shadow-purple-500/25">
-                <feature.icon className="h-8 w-8 text-white group-hover:text-purple-300 transition-colors" />
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-xl rounded-2xl mb-4 group-hover:scale-110 transition-all duration-300 shadow-lg border border-white/20 group-hover:shadow-purple-500/25">
+                <feature.icon className="h-6 sm:h-8 w-6 sm:w-8 text-white group-hover:text-purple-300 transition-colors" />
               </div>
               <h3
-                className="text-lg font-bold text-white mb-2"
+                className="text-base sm:text-lg font-bold text-white mb-2"
                 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
               >
                 {feature.title}
               </h3>
               <p
-                className="text-white/80 font-medium"
+                className="text-white/80 font-medium text-sm sm:text-base"
                 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
               >
                 {feature.description}
@@ -367,7 +369,3 @@ export default function Herosection() {
     </section>
   );
 }
-
-
-
-
